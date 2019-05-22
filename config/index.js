@@ -1,17 +1,17 @@
 // eslint-disable-next-line
-const path = require('path')
-const sassImporter = function(url) {
-  if(url[0] === '~' && url[1] !== '/') {
-    return {
-      file: path.resolve(__dirname, '..', 'node_modules', url.substr(1))
-    }
-  }
+// const path = require('path')
+// const sassImporter = function(url) {
+//   if(url[0] === '~' && url[1] !== '/') {
+//     return {
+//       file: path.resolve(__dirname, '..', 'node_modules', url.substr(1))
+//     }
+//   }
 
-  const reg = /^@\/scss\/(.*)/
-  return {
-    file: reg.test(url) ? path.resolve(__dirname, '..', 'src/scss', url.match(reg)[1]) : url
-  }
-}
+//   const reg = /^@\/scss\/(.*)/
+//   return {
+//     file: reg.test(url) ? path.resolve(__dirname, '..', 'src/scss', url.match(reg)[1]) : url
+//   }
+// }
 
 const config = {
   projectName: 'myself_car_owner_weapp',
@@ -38,25 +38,25 @@ const config = {
         'transform-object-rest-spread'
       ]
     },
-    sass: {
-      importer: sassImporter
-    }
+    // sass: {
+    //   importer: sassImporter
+    // }
   },
   defineConstants: {
   },
-  alias: {
-    '@/actions': path.resolve(__dirname, '..', 'src/actions'),
-    '@/services': path.resolve(__dirname, '..', 'src/services'),
-    '@/components': path.resolve(__dirname, '..', 'src/components'),
-    '@/configs': path.resolve(__dirname, '..', 'src/configs'),
-    '@/constants': path.resolve(__dirname, '..', 'src/constants'),
-    '@/models': path.resolve(__dirname, '..', 'src/models'),
-    '@/reducers': path.resolve(__dirname, '..', 'src/reducers'),
-    '@/scss': path.resolve(__dirname, '..', 'src/scss'),
-    '@/static': path.resolve(__dirname, '..', 'src/static'),
-    '@/utils': path.resolve(__dirname, '..', 'src/utils'),
-    '@/mixin': path.resolve(__dirname, '..', 'src/mixin')
-  },
+  // alias: {
+  //   '@/actions': path.resolve(__dirname, '..', 'src/actions'),
+  //   '@/services': path.resolve(__dirname, '..', 'src/services'),
+  //   '@/components': path.resolve(__dirname, '..', 'src/components'),
+  //   '@/configs': path.resolve(__dirname, '..', 'src/configs'),
+  //   '@/constants': path.resolve(__dirname, '..', 'src/constants'),
+  //   '@/models': path.resolve(__dirname, '..', 'src/models'),
+  //   '@/reducers': path.resolve(__dirname, '..', 'src/reducers'),
+  //   '@/scss': path.resolve(__dirname, '..', 'src/scss'),
+  //   '@/static': path.resolve(__dirname, '..', 'src/static'),
+  //   '@/utils': path.resolve(__dirname, '..', 'src/utils'),
+  //   '@/mixin': path.resolve(__dirname, '..', 'src/mixin')
+  // },
   copy: {
     patterns: [
     ],
