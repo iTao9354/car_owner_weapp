@@ -20,9 +20,21 @@
     "allowJs": true,
     "resolveJsonModule": true,
     "typeRoots": [
-      "node_modules/@types",
-      "global.d.ts"
-    ]
+      "node_modules/@types"
+    ],
+    "paths": {
+      "@/actions/*": ["./src/actions/*"],
+      "@/services/*": ["./src/services/*"],
+      "@/components/*": ["./src/components/*"],
+      "@/configs/*": ["./src/configs/*"],
+      "@/constants/*": ["./src/constants/*"],
+      "@/models/*": ["./src/models/*"],
+      "@/reducers/*": ["./src/reducers/*"],
+      "@/scss/*": ["./src/scss/*"],
+      "@/static/*": ["./src/static/*"],
+      "@/utils/*": ["./src/utils/*"],
+      "@/mixin/*": ["./src/mixin/*"]
+    }
   },
   "exclude": [
     "node_modules",
