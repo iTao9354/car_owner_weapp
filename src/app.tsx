@@ -6,7 +6,7 @@ import configStore from './store'
 import Index from './pages/index'
 
 import './app.scss'
-// import fly from '@/configs/fly'
+import fly from '@/configs/fly'
 
 // 如果需要在 h5 环境中开启 React Devtools
 // 取消以下注释：
