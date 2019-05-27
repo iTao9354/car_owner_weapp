@@ -1,0 +1,441 @@
+@import './_variables.scss';
+
+//给img加版本号
+@mixin img-url($imgurl) {
+  background-image: url(#{$imgurl}?t=#{$cvs});
+}
+
+@mixin font-dpr($font-size) {
+  font-size: $font-size / 2;
+  [data-dpr="2"] & {
+    font-size: $font-size;
+  }
+  [data-dpr="3"] & {
+    font-size: $font-size / 2 * 3;
+  }
+}
+
+@mixin lh-dpr($line-height) {
+  line-height: $line-height / 2;
+  [data-dpr="2"] & {
+    line-height: $line-height;
+  }
+  [data-dpr="3"] & {
+    line-height: $line-height / 2 * 3;
+  }
+}
+
+%clearfix {
+  @if $lte7 {
+    *zoom: 1;
+  }
+  &:before,
+  &:after {
+    content: "";
+    display: table;
+    clear: both;
+  }
+}
+
+@mixin float($float:left) {
+  float: $float;
+  @if $lte7 {
+    display: inline;
+  }
+}
+
+%float-left {
+  @include float;
+}
+
+%float-right {
+  @include float(right);
+}
+
+/*------------------flex布局等分--------------------- */
+
+/*
+【百分比等分布局，可多行，可单行，可加间距】
+* $columnNum 列数, 默认是2
+* $gap 间距, 默认是30px
+* $lrGap 的间距要减去$gap的一半, 默认是15px
+* $lr 左右边缘是否有间距, 默认是false
+* $wrap 是否换行，默认是false
+* $children 子元素class|标签（li div p a span strong）
+*/
+
+@mixin equal-flex-percent( $columnNum: 2, $gap: 30px, $lrGap: 15px, $lr: false, $wrap: false, $children: li) {
+  display: flex;
+  $childrenEle: li div p a span strong;
+  @if $lr {
+    // 左右边缘是否有gap
+    padding-left: px2rem($lrGap);
+    padding-right: px2rem($lrGap);
+  }
+  @else {
+    margin-left: px2rem(-$gap/2);
+    margin-right: px2rem(-$gap/2);
+  }
+  @if $wrap {
+    // 是否换行
+    flex-wrap: wrap;
+  }
+  @if index($childrenEle, $children) {
+    // 常用元素
+    #{$children} {
+      width: 100% / $columnNum;
+      padding: 0 px2rem($gap/2);
+    }
+  }
+  @else {
+    .#{$children} {
+      // 自动加.成class
+      width: 100% / $columnNum;
+      padding: 0 px2rem($gap/2);
+    }
+  }
+}
+
+/*
+【
+  flex等分布局, 不可多行
+  仅适用于两种情况的布局，
+  1. 单行宽度等分自适应，默认无间距
+  2. 单行宽度自适应, 间距等分
+ 】
+* $children 子元素class|标签（li div p a span strong）
+* $equal 子元素宽度是否等分，默认false
+*/
+
+@mixin equal-flex($children: li, $equal: false) {
+  display: flex;
+  justify-content: space-between;
+  &:before,
+  &:after {
+    content: "";
+  }
+  $childrenEle: li div p a span strong;
+  @if index($childrenEle, $children) {
+    // 常用元素
+    #{$children} {
+      @if $equal {
+        flex: 1;
+      }
+    }
+  }
+  @else {
+    .#{$children} {
+      // 自动加.成class
+      @if $equal {
+        flex: 1;
+      }
+    }
+  }
+}
+
+/*------------------------tag--------------------------*/
+
+/*
+【tag大小】
+* $padding 设置元素左右间距
+* $height 设置元素的高
+* $radius 设置圆角
+*/
+
+@mixin tag-size($padding: 12px, $height: 30px, $radius: $tagRadius) {
+  padding: 0 px2rem($padding);
+  line-height: $height;
+  @if $radius {
+    border-radius: px2rem($radius);
+  }
+}
+
+/*
+【tag颜色】
+* $colorText 字体颜色
+* $colorBg 背景颜色
+* $colorBorder border颜色
+*/
+
+@mixin tag-color($colorText: #999999, $colorBg: #ffffff, $colorBorder: #cccccc) {
+  color: nth($colorText, 1);
+  background-color: nth($colorBg, 1);
+  border-color: nth($colorBorder, 1);
+}
+
+/*-------------------------button-----------------------*/
+
+/*
+【btn大小】
+* $padding 设置元素左右间距
+* $height 设置元素的高
+* $radius 设置圆角
+*/
+
+@mixin btn-size($paddingTB: 6px, $paddingLR: 16px, $lineHeight: 20px, $radius: $btnRadius) {
+  line-height: $lineHeight;
+  padding: px2rem($paddingTB - 2px) px2rem($paddingLR);
+  @if $radius {
+    border-radius: $radius;
+  }
+}
+
+/*
+【btn颜色】
+* $colorText 字体颜色
+* $colorBg 背景颜色
+* $colorBorder border颜色
+*/
+
+@mixin btn-color($colorText: #666666, $colorBg: #ffffff, $colorBorder: #999999) {
+  color: nth($colorText, 1);
+  background-color: nth($colorBg, 1);
+  border-color: nth($colorBorder, 1);
+}
+
+// v arrow 方向箭头
+@mixin v-arrow($direction: right, $borderWidth: 2px, $size: 18px) {
+  display: inline-block;
+  vertical-align: middle;
+  width: px2rem($size);
+  height: px2rem($size);
+  @if $direction==top {
+    border-top: px2rem($borderWidth) solid currentColor;
+    border-right: px2rem($borderWidth) solid currentColor;
+    transform: rotate(-45deg);
+  }
+  @else if $direction==right {
+    border-top: px2rem($borderWidth) solid currentColor;
+    border-right: px2rem($borderWidth) solid currentColor;
+    transform: rotate(45deg);
+  }
+  @else if $direction==bottom {
+    border-left: px2rem($borderWidth) solid currentColor;
+    border-bottom: px2rem($borderWidth) solid currentColor;
+    transform: rotate(-45deg);
+  }
+  @if $direction==left {
+    border-left: px2rem($borderWidth) solid currentColor;
+    border-bottom: px2rem($borderWidth) solid currentColor;
+    transform: rotate(45deg);
+  }
+}
+
+// v triangle 方向箭头
+@mixin v-triangle($direction: right, $borderWidth: 11px) {
+  display: inline-block;
+  border: solid transparent;
+  border-width: px2rem($borderWidth);
+  @if $direction==top {
+    border-bottom-color: currentColor;
+  }
+  @else if $direction==right {
+    border-left-color: currentColor;
+  }
+  @else if $direction==bottom {
+    border-top-color: currentColor;
+  }
+  @if $direction==left {
+    border-right-color: currentColor;
+  }
+}
+
+// translate center
+@mixin center-translate($direction: both) {
+  position: absolute;
+  @if $direction==both {
+    top: 50%;
+    left: 50%;
+    transform: translate3d(-50%, -50%, 0);
+  }
+  @else if $direction==x {
+    left: 50%;
+    transform: translate3d(-50%, 0, 0);
+  }
+  @else if $direction==y {
+    top: 50%;
+    transform: translate3d(0, -50%, 0);
+  }
+}
+
+/*------------------------title-block--------------------------*/
+
+/*
+【标题块的边距及border的开关设置】
+* $lrGap 设置标题块左右的外间距
+* $lrSpace 设置标题块的左右内间距
+* $lrM  外边距开关
+* $lrPd 内边距开关
+* $borderBottom 下border开关
+* $borderTop 上border开关
+*/
+
+@mixin title-block( $lrGap: 30px, $lrSpace: 30px, $lrM: false, $lrPd: true, $borderBottom: true, $borderTop: false) {
+  @if $lrM {
+    margin-left: px2rem($lrGap);
+    margin-right: px2rem($lrGap);
+  }
+  @if $lrPd {
+    padding-left: px2rem($lrSpace);
+    padding-right: px2rem($lrSpace);
+  }
+  @if $borderBottom {
+    border-bottom: 1px solid $colorBorder;
+  }
+  @if $borderTop {
+    border-top: 1px solid $colorBorder;
+  }
+}
+
+// border 1px
+@mixin border-dpr($width, $border-style, $color) {
+  border-width: $width/2;
+  border-style: $border-style;
+  border-color: $color;
+  [data-dpr="2"] & {
+    border-width: $width;
+  }
+  [data-dpr="3"] & {
+    border-width: $width / 2 * 3;
+  }
+}
+
+// 垂直居中
+@mixin middle($width, $height) {
+  width: $width;
+  height: $height;
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  margin-left: (- $width / 2);
+  margin-top: (- $height / 2);
+}
+
+// 多行文字垂直居中
+@mixin middle-box($boxWidth, $boxHeight) {
+  width: $boxWidth;
+  height: $boxHeight;
+  position: relative;
+  display: table;
+  .middle-inner {
+    display: table-cell;
+    vertical-align: middle;
+    text-align: center; // ie6-7
+    @if $lte7 {
+      *position: absolute;
+      *top: 50%;
+      *left: 50%;
+      p {
+        position: relative;
+        *top: -50%;
+        *left: -50%;
+      }
+    }
+  }
+}
+
+// Triangle
+@mixin triangle($direction, $size, $borderColor) {
+  content: "";
+  height: 0;
+  width: 0;
+  @if $direction==top {
+    border-bottom: $size solid $borderColor;
+    border-left: $size dashed transparent;
+    border-right: $size dashed transparent;
+  }
+  @else if $direction==right {
+    border-left: $size solid $borderColor;
+    border-top: $size dashed transparent;
+    border-bottom: $size dashed transparent;
+  }
+  @else if $direction==bottom {
+    border-top: $size solid $borderColor;
+    border-left: $size dashed transparent;
+    border-right: $size dashed transparent;
+  }
+  @else if $direction==left {
+    border-right: $size solid $borderColor;
+    border-top: $size dashed transparent;
+    border-bottom: $size dashed transparent;
+  }
+}
+
+@mixin border-none() {
+  &:after {
+    display: none;
+  }
+}
+
+// @mixin bg-image($url) {
+//   background-image: url($url + "@2x.png");
+//   @media (-webkit-min-device-pixel-ratio: 3), (min-device-pixel-ratio: 3) {
+//     background-image: url($url + "@3x.png");
+//   }
+// }
+
+// @media (-webkit-min-device-pixel-ratio: 1.5),
+// (min-device-pixel-ratio: 1.5) {
+//   .border-1px {
+//     &::after {
+//       -webkit-transform: scaleY(0.7);
+//       transform: scaleY(0.7);
+//     }
+//   }
+// }
+
+// @media (-webkit-min-device-pixel-ratio: 2),
+// (min-device-pixel-ratio: 2) {
+//   .border-1px {
+//     &::after {
+//       -webkit-transform: scaleY(0.5);
+//       transform: scaleY(0.5);
+//     }
+//   }
+// }
+
+// @media (-webkit-min-device-pixel-ratio: 3),
+// (min-device-pixel-ratio: 3) {
+//   .border-1px {
+//     &::after {
+//       -webkit-transform: scaleY(0.3333);
+//       transform: scaleY(0.3333);
+//     }
+//   }
+// }
+
+// @media (-webkit-min-device-pixel-ratio: 4),
+// (min-device-pixel-ratio: 4) {
+//   .border-1px {
+//     &::after {
+//       -webkit-transform: scaleY(0.25);
+//       transform: scaleY(0.25);
+//     }
+//   }
+// }
+
+// @mixin bb-1px($color) {
+//   position: relative;
+//   &:after {
+//     content: '';
+//     display: block;
+//     position: absolute;
+//     left: 0;
+//     bottom: 0;
+//     width: 100%;
+//     border-top: 1px solid $color;
+//   }
+// }
+
+// @mixin bl-1px($color) {
+//   position: relative;
+//   &:before {
+//     content: '';
+//     display: block;
+//     position: absolute;
+//     top: 0;
+//     left: 0;
+//     bottom: 0;
+//     border-left: 1px solid $color;
+//   }
+// }

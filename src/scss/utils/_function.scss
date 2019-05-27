@@ -1,0 +1,22 @@
+@import './_variables.scss';
+
+//给img加版本号
+@function img-url($imgurl){
+	@return url($imgurl+'?t='+$rev);
+}
+
+/* px转rem函数
+  『$px』按照iphone6适配的，即750尺寸的页面实际所量的尺寸
+  『$px-rem』这个变量是用来控制px转rem的开关变量，默认为true,想保留px单位请设为false
+*/
+$browser-default-font-size: 75px !default; //变量的值可以根据自己需求定义 iphone6的设计尺寸是750，750/10 = 75
+$px-rem: true; // 是否转rem
+@function px2rem($px){
+  // @if $px-rem == true{
+  //   @return $px / $browser-default-font-size * 1rem;
+  // }
+  @return $px
+}
+
+
+
