@@ -2,7 +2,7 @@ import Taro from '@tarojs/taro'
 import { ResponseError, ResponseNeedLogin } from '@/models/response'
 import { FlyModal } from 'flyio'
 import { clear } from '@/utils/token'
-import { TOKEN_KEY, OPEN_ID_KEY } from '@/models/key'
+import { TOKEN_KEY } from '@/models/key'
 
 let Fly: FlyModal
 if(process.env.TARO_ENV === 'h5') {
@@ -27,10 +27,9 @@ fly.config.withCredentials = true
 fly.interceptors.request.use(async (request) => {
   try {
     request.headers[TOKEN_KEY] = Taro.getStorageSync(TOKEN_KEY)
-    request.headers[OPEN_ID_KEY] = Taro.getStorageSync(OPEN_ID_KEY)
-
-    if (request.body && request.body.userMobileKey) {
-      request.headers['user-mobile-key'] = request.body.userMobileKey
+    // 加入时间戳清缓存，不过小程序好像没缓存
+    if (request.method && request.method.toUpperCase() === 'GET') {
+      request.params._ = Date.now()
     }
   } catch(e) {
     console.log(e.errMsg || e.toString())

@@ -12,5 +12,11 @@ declare module 'flyio' {
     new (config?: FlyRequestConfig): Fly
   }
 
+  interface FlyRequestConfig {
+    params: {
+      [key: string]: any
+    }
+  }
+
   interface FlyModal extends Fly {}
 }
