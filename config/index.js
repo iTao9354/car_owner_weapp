@@ -135,5 +135,8 @@ module.exports = function (merge) {
   if (process.env.NODE_ENV === 'test') {
     return merge({}, config, require('./test'))
   }
+  if (process.env.NODE_ENV === 'uat') {
+    return merge({}, config, require('./uat'))
+  }
   return merge({}, config, require('./prod'))
 }
