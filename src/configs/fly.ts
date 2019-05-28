@@ -4,8 +4,6 @@ import { FlyModal } from 'flyio'
 import { clear } from '@/utils/token'
 import { TOKEN_KEY, OPEN_ID_KEY } from '@/models/key'
 
-const BASE_URL = process.env.BASE_URL
-
 let Fly: FlyModal
 if(process.env.TARO_ENV === 'h5') {
   Fly = require('flyio/dist/npm/fly')
@@ -17,10 +15,11 @@ if(process.env.TARO_ENV === 'h5') {
 const tokenFly = new Fly()
 const fly = new Fly()
 
+console.log(GLOBAL_BASE_URL)
 tokenFly.config.timeout = 10000
-tokenFly.config.baseURL = BASE_URL
+tokenFly.config.baseURL = GLOBAL_BASE_URL
 
-fly.config.baseURL = BASE_URL
+fly.config.baseURL = GLOBAL_BASE_URL
 fly.config.withCredentials = true
 
 // 拦截器

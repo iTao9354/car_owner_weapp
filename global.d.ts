@@ -21,3 +21,4 @@ declare const process: {
     [key: string]: any;
   }
 }
+declare const GLOBAL_BASE_URL: string

@@ -4,6 +4,7 @@ module.exports = {
     NODE_ENV: '"production"'
   },
   defineConstants: {
+    GLOBAL_BASE_URL: '"https://carownerweapp.rocoinfo.cn"'
   },
   weapp: {},
   h5: {
