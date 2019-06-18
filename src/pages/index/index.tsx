@@ -1,83 +1,60 @@
 import { ComponentClass } from 'react'
-import Taro, { Component, Config } from '@tarojs/taro'
-import { View, Button } from '@tarojs/components'
-import { connect } from '@tarojs/redux'
-import { add, minus, asyncAdd } from '../../actions/counter'
-import './index.scss'
+import { Component, Config } from '@tarojs/taro'
+import { View, Image, Button, Text } from '@tarojs/components'
+import styles from './index.scss'
+import logoImg from '@/static/images/logo.png'
+import wxImg from '@/static/images/icon-wx.png'
 
-type PageStateProps = {
-  counter: {
-    num: number
-  }
-}
-
-type PageDispatchProps = {
-  add: () => void
-  dec: () => void
-  asyncAdd: () => void
-}
-
+// store里的数据
+type PageStateProps = {}
+// store里的方法
+type PageDispatchProps = {}
+// 父子组件传递的props
 type PageOwnProps = {}
-
+// 自己的data
 type PageState = {}
 
-type IProps = PageStateProps & PageDispatchProps & PageOwnProps
+type IProps = PageStateProps & PageOwnProps & PageDispatchProps
 
 interface Index {
   props: IProps
+  state: PageState
 }
 
-@connect(({ counter }) => ({
-  counter
-}), (dispatch) => ({
-  add () {
-    dispatch(add())
-  },
-  dec () {
-    dispatch(minus())
-  },
-  asyncAdd () {
-    dispatch(asyncAdd())
-  }
-}))
 class Index extends Component {
-
-  /**
-   * 指定config的类型声明为: Taro.Config
-   *
-   * 由于 typescript 对于 object 类型推导只能推出 Key 的基本类型
-   * 对于像 navigationBarTextStyle: 'black' 这样的推导出的类型是 string
-   * 提示和声明 navigationBarTextStyle: 'black' | 'white' 类型冲突, 需要显示声明类型
-   */
   config: Config = {
     navigationBarTitleText: '首页'
   }
 
-  componentWillMount () { }
+  constructor (props) {
+    super(props)
+    this.state = {
+      ifAuthorized: true
+    }
+  }
 
-  componentDidMount () { }
-
-  componentWillUnmount () { }
-
-  componentDidShow () { }
-
-  componentDidHide () { }
+  componentDidMount () {
+    // 这里写初始化方法
+  }
 
   render () {
     return (
-      <View className='index'>
-        <Button className='add_btn' onClick={this.props.add}>+</Button>
-        <Button className='dec_btn' onClick={this.props.dec}>-</Button>
-        <Button className='dec_btn' onClick={this.props.asyncAdd}>async</Button>
-        <View>{this.props.counter.num}</View>
+      <View className={styles.wrap_login}>
+        <Image src={logoImg} className={styles.img_logo}></Image>
+        <View className={styles.title}>大诚车服</View>
+        <View className={styles.subtitle}>一站式车主养车平台</View>
+        <View className={styles.tip}>一键开启便捷车生活</View>
+        <Button openType="getUserInfo" className={styles.btn_login}>
+          <Image src={wxImg} className={styles.img_wx}></Image>
+          <Text className={styles.text}>微信登录</Text>
+        </Button>
       </View>
     )
   }
 }
 
-// #region 导出注意	
-// 经过上面的声明后需要将导出的 Taro.Component 子类修改为子类本身的 props 属性	
-// 这样在使用这个子类时 Ts 才不会提示缺少 JSX 类型参数错误
-// #endregion
-
+  // #region 导出注意 
+  // 经过上面的声明后需要将导出的 Taro.Component 子类修改为子类本身的 props 属性  
+  // 这样在使用这个子类时 Ts 才不会提示缺少 JSX 类型参数错误
+  // #endregion
 export default Index as ComponentClass<PageOwnProps, PageState>

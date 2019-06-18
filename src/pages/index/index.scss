@@ -1,0 +1,53 @@
+@import '@/scss/utils/_variables.scss';
+
+.wrap_login {
+  text-align: center;
+}
+.img_logo {
+  height: 164px;
+  width: 164px;
+  margin: 0px auto 34px;
+}
+.title{
+  font-size: 52px;
+  line-height: 73px;
+  font-weight: 600;
+  color: #3B3B58;
+}
+.subtitle{
+  font-size: 34px;
+  line-height: 48px;
+  font-weight: 500;
+  color: #3B3B58;
+  margin-top: 10px;
+  margin-bottom: 383px;
+}
+
+.tip{
+  font-size: 28px;
+  line-height: 40px;
+  color: #828282;
+  font-weight: 500;
+  margin-bottom: 20px;
+}
+.btn_login{
+  height: 92px;
+  width: 640px;
+  background: #28BD76;
+  margin: 0 auto;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+
+  .img_wx{
+    height: 32px;
+    width: 40px;
+    margin-right: 10px;
+  }
+
+  .text{
+    color: #ffffff;
+    font-weight: 500;
+    font-size: 36px;
+  }
+}
