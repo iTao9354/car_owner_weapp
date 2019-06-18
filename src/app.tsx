@@ -29,7 +29,26 @@ class App extends Component {
     pages: [
       'pages/index/index',
       'pages/bind/bind',
+      // 'pages/user/personal'
     ],
+    tabBar: {
+      selectedColor: '#233C79',
+      color: '#9BA2B8',
+      list: [
+        {
+          pagePath: 'pages/index/index',
+          text: '首页',
+          selectedIconPath: './static/images/tabs/index-active.png',
+          iconPath: './static/images/tabs/index.png',
+        },
+        {
+          pagePath: 'pages/bind/bind',
+          text: '我的',
+          selectedIconPath: './static/images/tabs/user-active.png',
+          iconPath: './static/images/tabs/user.png',
+        }
+      ]
+    },
     window: {
       backgroundTextStyle: 'light',
       navigationBarBackgroundColor: '#fff',
