@@ -1,0 +1,206 @@
+@import '@/scss/utils/_variables.scss';
+ 
+.personal{
+  background: #FBFBFB;
+}
+ 
+.personal_top{
+  // width:750px;
+  // height: 266px;
+  position: relative;
+  .personal_bg{
+    width:750px;
+    height: 266px;
+  }
+  .personal_top_cont{
+    position: absolute;
+    top:0;
+    left:0;
+    width:100%;
+    height:100%;
+ 
+    .personal_top_person{
+      display: flex;
+      justify-content: flex-start;
+      align-items: center;
+      padding:48px 0 0 32px;
+      .personal_top_person_img{
+        width:98px;
+        height:98px;
+        background: #49496A;
+        border-radius: 50px;
+        overflow: hidden;
+        border:1px solid #C0C0C0;
+        .person_icon_img{
+          width:98px;
+          height:98px;
+        }
+      }
+      .personal_top_person_name{
+        padding-left:33px;
+        font-size: 28px;
+        font-weight: 500;
+        color: #FFFFFF;
+        .person_name{
+          font-size: 32px;
+          padding-bottom: 10px;
+        }
+      }
+    }
+    .personal_top_set{
+      position: absolute;
+      top:30px;
+      right:0;
+      background: #5870B7;
+      border-radius: 26px 0 0 26px;
+      width:120px;
+      height:48px;
+      display: flex;
+      justify-content: flex-start;
+      align-items: center;
+      font-weight:500;
+      font-size: 24px;
+      color: #DADFEC;
+      .personal_icon_set{
+        width:28px;
+        height: 26px;
+        margin: 0 10px;
+      }
+    }
+    .personal_top_vip{
+      position: absolute;
+      bottom:0;
+      left:40px;
+      width:670px;
+      height:70px;
+      background-image: linear-gradient(-90deg, #242C2C 0%, #222222 51%, #1B1B1B 100%);
+      border-radius: 20px 20px 0 0;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      box-sizing: border-box;
+      padding: 0 30px;
+      .personal_top_vip_left{
+        font-size: 24px;
+        font-weight:500;
+        color: #F3DEA7;
+        display: flex;
+        justify-content: flex-start;
+        align-items: center;
+        .personal_icon_vip{
+          width:28px;
+          height: 26px;
+          margin-right: 14px;
+        }
+      }
+      .personal_top_vip_right{
+       
+        .personal_top_vip_btn{
+          display: flex;
+          justify-content: center;
+          align-items: center;
+          background-image: linear-gradient(-180deg, #FCF0CB 0%, #CCA648 100%);
+          border-radius: 18px;
+          padding:4px 14px;
+          // width:120px;
+          font-size: 20px;
+          font-weight:500;
+          color: #000000;
+        }
+      }
+      .personal_top_vip_btn_icon{
+        width: 8px;
+        height:12px;
+        margin-left:4px;
+      }
+    }
+  }
+ 
+ 
+}
+.personal_main{
+  padding:$lrSpace $lrSpace 0;
+ 
+  .personal_main_item{
+    background: #FFFFFF;
+    box-shadow: 0 0 6px 0 rgba(0,0,0,0.10);
+    border-radius: 10px;
+    margin-bottom: $lrSpace;
+    .personal_main_item_title{
+      padding-left: $lrSpace;
+      font-size: 30px;
+      font-weight: 500;
+      color: #49496A;
+      line-height: 70px;
+      border-bottom:1px solid #f0f0f0;
+    }
+    .personal_main_item_box{
+      display: flex;
+      // justify-content: space-around;
+      justify-content: flex-start;
+      align-items: center;
+      .personal_main_item_box_one{
+        width:172px;
+        display: flex;
+        flex-direction: column;
+        justify-content: center;
+        align-items: center;
+        padding:$lrSpace 0 $gap;
+        font-size: 24px;
+        font-weight:500;
+        color: #49496A;
+        position: relative;
+        .personal_main_item_box_one_img{
+          position: relative;
+        }
+        .personal_main_item_icon{
+          width:80px;
+          height:80px;
+          margin-bottom:10px;
+        }
+        .personal_main_item_text_sm{
+          font-size: 22px;
+        }
+        .personal_main_item_icon_sm{
+          width:60px;
+          height:60px;
+          margin-bottom:10px;
+        }
+        .personal_main_item_tip{
+          position: absolute;
+          top: 0;
+          left:80px;
+          background: #FF3B30;
+          padding:0 10px;
+          border-radius: 20px;
+          font-size: 22px;
+          font-weight:500;
+          color: #FFFFFF;
+        }
+        .personal_main_item_list_tip{
+          position: absolute;
+          left:0;
+          bottom: 30px;
+          width:8px;
+          height: 54px;
+          border-left:1px solid #9BA2B8;
+          display: flex;
+          justify-content: center;
+          align-items: center;
+          .personal_main_item_list_tip_img{
+            background: #fff;
+            height:12px;
+            width: 9px;
+            margin-left:-1px;
+            .personal_list_icon{
+              width: 8px;
+              height:12px;
+            }
+          }
+          
+        }
+ 
+      }
+    }
+  }
+}

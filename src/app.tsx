@@ -27,9 +27,9 @@ class App extends Component {
    */
   config: Config = {
     pages: [
+      'pages/user/index',
       'pages/index/index',
       'pages/bind/bind',
-      // 'pages/user/personal'
     ],
     tabBar: {
       selectedColor: '#233C79',
@@ -42,7 +42,7 @@ class App extends Component {
           iconPath: './static/images/tabs/index.png',
         },
         {
-          pagePath: 'pages/bind/bind',
+          pagePath: 'pages/user/index',
           text: '我的',
           selectedIconPath: './static/images/tabs/user-active.png',
           iconPath: './static/images/tabs/user.png',
