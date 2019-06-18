@@ -1,0 +1,95 @@
+.wrap_bind {
+  padding-top: 170px;  
+}
+.img_logo{
+  height: 164px;
+  width: 164px;
+  margin: 0px auto 34px;
+}
+.title{
+  font-size: 52px;
+  line-height: 73px;
+  font-weight: 600;
+  color: #3B3B58;
+  text-align: center;
+}
+
+.subtitle{
+  font-size: 34px;
+  line-height: 48px;
+  font-weight: 500;
+  color: #3B3B58;
+  margin-top: 10px;
+  margin-bottom: 85px;
+  text-align: center;
+}
+
+
+.label_wrap{
+  display: flex;
+  height: 110px;
+  margin: 0 60px;
+  border-bottom: 1px solid #747D9A;
+  align-items: center;
+  font-weight: 400;
+
+  &.label_wrap_code{
+    justify-content: space-between;
+  }
+
+  .label_name{
+    width: 180px;
+    min-width: 180px;
+    font-size: 30px;
+    color: #747D9A;
+  }
+
+  .label_input{
+    font-size: 30px;
+    color: #747D9A;
+    width: 210px;
+  }
+  .label_input_mobile{
+    width: 440px;
+  }
+}
+
+.code_wrap{
+  display: flex;
+  align-items: center;
+}
+
+.btn_get{
+  background: #0C35B3;
+  height: 54px;
+  line-height: 54px;
+  font-size: 26px;
+  color: #ffffff;
+  margin: 0;
+}
+
+.btn_time{
+  background: #ffffff;
+  border: 1px solid #49496A;
+  height: 54px;
+  line-height: 54px;
+  font-size: 26px;
+  color: #49496A;
+  margin: 0;
+}
+.bind_submit{
+  margin-top: 136px;
+}
+.bind_btn{
+  height: 92px;
+  width: 640px;
+  background: #0C35B3;
+  margin: 0 auto;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  color: #ffffff;
+  font-weight: 500;
+  font-size: 36px;
+  
+}

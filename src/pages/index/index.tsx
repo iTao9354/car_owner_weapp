@@ -87,7 +87,7 @@ class Index extends Component {
         <View className={styles.title}>xxx车服</View>
         <View className={styles.subtitle}>一站式车主养车平台</View>
         <View className={styles.tip}>一键开启便捷车生活</View>
-        <Button openType="getUserInfo" className={styles.btn_login}>
+        <Button openType='getUserInfo' className={styles.btn_login}>
           <Image src={wxImg} className={styles.img_wx}></Image>
           <Text className={styles.text}>微信登录</Text>
         </Button>
