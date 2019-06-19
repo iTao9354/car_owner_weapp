@@ -1,12 +1,8 @@
 import Taro from '@tarojs/taro'
 import { TOKEN_KEY, USER_KEY } from '@/models/key'
-import { FlyResponse } from 'flyio'
 
-export function setToken(res: FlyResponse) {
-  Taro.setStorageSync(
-    TOKEN_KEY,
-    (res.headers[TOKEN_KEY] && res.headers[TOKEN_KEY][0]) || ''
-  )
+export function setToken(token: string) {
+  Taro.setStorageSync(TOKEN_KEY, token || '')
 }
 
 export function getToken() {

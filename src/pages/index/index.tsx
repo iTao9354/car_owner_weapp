@@ -4,6 +4,9 @@ import { View, Image, Button, Text } from '@tarojs/components'
 import styles from './index.scss'
 import logoImg from '@/static/images/logo.png'
 import wxImg from '@/static/images/icon-wx.png'
+import { loginService } from '@/services/login'
+import { ResponseSuccess } from '@/models/response'
+import { setToken } from '@/utils/token'
 
 // store里的数据
 type PageStateProps = {}
@@ -13,7 +16,7 @@ type PageDispatchProps = {}
 type PageOwnProps = {}
 // 自己的data
 type PageState = {
-  ifAuthorized: boolean
+  isAuthorized: boolean
 }
 
 type IProps = PageStateProps & PageOwnProps & PageDispatchProps
@@ -27,29 +30,42 @@ class Index extends Component {
   config: Config = {
     navigationBarTitleText: 'xxx车服'
   }
-
+  
   constructor (props) {
     super(props)
     this.state = {
-      ifAuthorized: true
+      isAuthorized: true
     }
   }
-
+  
   componentDidMount () {
     // 这里写初始化方法
-    this.userInfo()
+    this.weappLogin('1')
+  }
+  
+  // 使用小程序code登录
+  loginService = new loginService()
+  async weappLogin (code: string) {
+    Taro.showLoading()
+    try {
+      const res = await this.loginService.doWeappLogin(code)
+      if (res.data.code === ResponseSuccess) {
+        const resData = res.data.data
+        setToken(resData.weappAccessToken)
+        this.userInfo(resData.loginUser)
+      }
+    } catch (e) {}
+    Taro.hideLoading()
   }
 
-  userInfo() {
-    Taro.getUserInfo().then((e) => {
+  // 获取用户信息，判断是否授权
+  userInfo(loginUser) {
+    Taro.getUserInfo({
+      withCredentials: true
+    }).then((e) => {
       console.log(e)
-      Taro.showToast({
-        title: 'yes',
-        icon: 'success',
-        duration: 2000
-      })
-      // 登录
-      this.login()
+      console.log(loginUser)
+      // this.props.dispatchUser(Object.assign({}, e.userInfo, loginUser)
     }).catch((err) => {
       Taro.showToast({
         title: 'no',
@@ -82,15 +98,19 @@ class Index extends Component {
 
   render () {
     return (
-      <View className={styles.wrap_login}>
-        <Image src={logoImg} className={styles.img_logo}></Image>
-        <View className={styles.title}>xxx车服</View>
-        <View className={styles.subtitle}>一站式车主养车平台</View>
-        <View className={styles.tip}>一键开启便捷车生活</View>
-        <Button openType='getUserInfo' className={styles.btn_login}>
-          <Image src={wxImg} className={styles.img_wx}></Image>
-          <Text className={styles.text}>微信登录</Text>
-        </Button>
+      <View>
+      {!this.state.isAuthorized && 
+        <View className={styles.wrap_login}>
+          <Image src={logoImg} className={styles.img_logo}></Image>
+          <View className={styles.title}>xxx车服</View>
+          <View className={styles.subtitle}>一站式车主养车平台</View>
+          <View className={styles.tip}>一键开启便捷车生活</View>
+          <Button openType='getUserInfo' className={styles.btn_login}>
+            <Image src={wxImg} className={styles.img_wx}></Image>
+            <Text className={styles.text}>微信登录</Text>
+          </Button>
+        </View>
+      }
       </View>
     )
   }

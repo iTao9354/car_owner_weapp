@@ -70,12 +70,10 @@ class User extends Component {
               </View>
               <View className={styles.personal_top_vip_right}>
                 {
-                  havePhone
-                    ? <View></View>
-                    : <View className={styles.personal_top_vip_btn}>
-                      <Text>绑定会员</Text>
-                      <Image src={personalVipRight} className={styles.personal_top_vip_btn_icon}/>
-                    </View>
+                  havePhone && <View className={styles.personal_top_vip_btn}>
+                    <Text>绑定会员</Text>
+                    <Image src={personalVipRight} className={styles.personal_top_vip_btn_icon}/>
+                  </View>
                 }
               </View>
             </View>
