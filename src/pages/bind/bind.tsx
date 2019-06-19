@@ -1,7 +1,8 @@
 import { ComponentClass } from 'react'
-import { Component, Config } from '@tarojs/taro'
+import Taro, { Component, Config } from '@tarojs/taro'
 import { View, Image, Form, Label, Text, Input, Button } from '@tarojs/components'
 import classNames from 'classnames'
+import * as validator from '@/utils/validator'
 import styles from './bind.scss'
 import logoImg from '@/static/images/logo.png'
 
@@ -10,7 +11,8 @@ type PageState = {
   mobile: string,
   code: string,
   codeFlag: boolean,
-  leftTime: number
+  leftTime: number,
+  submitting: boolean
 }
 type IProps = PageOwnProps
 interface Bind {
@@ -29,7 +31,8 @@ class Bind extends Component {
       mobile: '',
       code: '',
       codeFlag: false,
-      leftTime: 60
+      leftTime: 60,
+      submitting: true // 可提交
     }
   }
 
@@ -46,6 +49,60 @@ class Bind extends Component {
     this.setState({
       codeFlag: true
     })
+  }
+
+  // 校验手机号
+  validMobile () {
+    const trimmedMobile = this.state.mobile.trim()
+    if (trimmedMobile === '') {
+      Taro.showToast({
+        title: '手机号码不能为空',
+        icon: 'none',
+        duration: 2000
+      })
+      return false
+    } else if (!validator.MobileValid(trimmedMobile)) {
+      Taro.showToast({
+        title: '请输入正确的手机号',
+        icon: 'none',
+        duration: 2000
+      })
+      return false
+    } else {
+      return true
+    }
+  }
+  // 校验验证码
+  validCode () {
+    const trimmedCode = this.state.code.trim()
+    if (trimmedCode === '') {
+      Taro.showToast({
+        title: '验证码不能为空',
+        icon: 'none',
+        duration: 2000
+      })
+      return false
+    } else if (!validator.CaptchaValid(trimmedCode, 4)) {
+      Taro.showToast({
+        title: '验证码错误',
+        icon: 'none',
+        duration: 2000
+      })
+      return false
+    } else {
+      return true
+    }
+  }
+  // 一键绑定
+  onSubmit () {
+    if (!this.state.submitting) {
+      return
+    }
+    if (this.validMobile() && this.validCode()) {
+      this.setState({
+        submitting: false
+      })
+    }
   }
 
   render () {
@@ -75,8 +132,10 @@ class Bind extends Component {
             <View className={styles.code_wrap}>
               <Text className={styles.label_name}>验证码</Text>
               <Input 
+                maxLength={6}
                 value={code}
                 onInput={this.inputHandler.bind(this, 'code')}
+                onConfirm={this.onSubmit.bind(this)}
                 className={styles.label_input}
                 placeholder='请输入验证码'/>
             </View>
@@ -86,6 +145,9 @@ class Bind extends Component {
                 : <Button className={styles.btn_time}><Text>重新获取({ leftTime }s)</Text></Button>
             }
           </Label>
+          <View className={styles.bind_submit}>
+            <Button onClick={this.onSubmit.bind(this)} className={styles.bind_btn}>一键绑定</Button>
+          </View>
         </Form>
       </View>
     )
