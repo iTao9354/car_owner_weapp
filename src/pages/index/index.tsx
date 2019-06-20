@@ -7,11 +7,16 @@ import wxImg from '@/static/images/icon-wx.png'
 import { loginService } from '@/services/login'
 import { ResponseSuccess } from '@/models/response'
 import { setToken } from '@/utils/token'
+import { connect } from '@tarojs/redux'
+import { setUserAction } from '@/actions/user'
+import { TOKEN_KEY } from '@/models/key'
 
 // store里的数据
 type PageStateProps = {}
 // store里的方法
-type PageDispatchProps = {}
+type PageDispatchProps = {
+  dispatchUser: (user) => void
+}
 // 父子组件传递的props
 type PageOwnProps = {}
 // 自己的data
@@ -26,6 +31,17 @@ interface Index {
   state: PageState
 }
 
+const mapStateToProps = (state, ownProps) => {
+  return {}
+}
+const mapDispatchToProps = (dispatch, ownProps) => {
+  return {
+    dispatchUser (user) {
+      dispatch(setUserAction(user))
+    }
+  }
+}
+@connect(mapStateToProps, mapDispatchToProps)
 class Index extends Component {
   config: Config = {
     navigationBarTitleText: 'xxx车服'
@@ -38,11 +54,32 @@ class Index extends Component {
     }
   }
   
-  componentDidMount () {
-    // 这里写初始化方法
-    this.weappLogin('1')
+  componentWillMount () {
+    this.getWeappCode()
+    if (!!this.computedDirectToIndex) {
+
+    } else {
+      this.getWeappCode()
+    }
+  }
+
+  // 是否有token，有说明已经登陆
+  get computedDirectToIndex () {
+    try {
+      const token = Taro.getStorageSync(TOKEN_KEY)
+      return token
+    } catch (e) {
+      return false
+    }
   }
   
+  // 微信登录获取code
+  getWeappCode () {
+    Taro.login().then((res) => {
+      this.weappLogin(res.code)
+    })
+  }
+
   // 使用小程序code登录
   loginService = new loginService()
   async weappLogin (code: string) {
@@ -58,41 +95,27 @@ class Index extends Component {
     Taro.hideLoading()
   }
 
+  // 用户授权
+  onGetUserInfo (e) {
+    console.log(e)
+    if (e.detail.errMsg === 'getUserInfo:ok') {
+      this.getWeappCode()
+    }
+  }
+
   // 获取用户信息，判断是否授权
   userInfo(loginUser) {
     Taro.getUserInfo({
       withCredentials: true
-    }).then((e) => {
-      console.log(e)
-      console.log(loginUser)
-      // this.props.dispatchUser(Object.assign({}, e.userInfo, loginUser)
-    }).catch((err) => {
-      Taro.showToast({
-        title: 'no',
-        icon: 'success',
-        duration: 2000
+    }).then((res) => {
+      this.props.dispatchUser(Object.assign({}, res.userInfo, loginUser))
+      Taro.reLaunch({
+        url: '/pages/user/index'
       })
-    })
-  }
-
-  // 登录
-  login() {
-    Taro.login().then((res) => {
-      console.log(res)
-    })
-  }
-
-  // 检查登录态是否过期
-  checkSession() {
-    Taro.checkSession({
-      success () {
-        console.log('登录状态未过期')
-        //session_key 未过期，并且在本生命周期一直有效
-      },
-      fail () {
-        // session_key 已经失效，需要重新执行登录流程
-        this.login()
-      }
+    }).catch((err) => {
+      this.setState({
+        isAuthorized: false
+      })
     })
   }
 
@@ -105,7 +128,7 @@ class Index extends Component {
           <View className={styles.title}>xxx车服</View>
           <View className={styles.subtitle}>一站式车主养车平台</View>
           <View className={styles.tip}>一键开启便捷车生活</View>
-          <Button openType='getUserInfo' className={styles.btn_login}>
+          <Button openType='getUserInfo' onGetUserInfo={this.onGetUserInfo} className={styles.btn_login}>
             <Image src={wxImg} className={styles.img_wx}></Image>
             <Text className={styles.text}>微信登录</Text>
           </Button>
