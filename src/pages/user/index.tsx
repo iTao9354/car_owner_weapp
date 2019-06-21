@@ -21,17 +21,31 @@ import personalListThree from '@/static/images/personal/icon-list-three.png'
 import personalListFour from '@/static/images/personal/icon-list-four.png'
 import { UserService } from '@/services/user'
 import { ResponseSuccess } from '@/models/response'
+import { UserModel } from '@/models/user'
+import { connect } from '@tarojs/redux'
 
+type PageStateProps = {
+  userState: UserModel
+}
 type PageOwnProps = {}
 type PageState = {
-  havePhone: boolean
+  name: string
+  nickName: string
+  mobile: string
+  avatarUrl: string
 }
-type IProps = PageOwnProps
+type IProps = PageStateProps & PageOwnProps
 interface User {
   props: IProps
   state: PageState
 }
 
+const mapStateToProps = (state, ownProps) => {
+  return {
+    userState: state.user
+  }
+}
+@connect(mapStateToProps)
 class User extends Component {
   config: Config = {
     navigationBarTitleText: '个人中心'
@@ -40,7 +54,10 @@ class User extends Component {
   constructor () {
     super()
     this.state = {
-      havePhone: false
+      name: '',
+      nickName: '',
+      mobile: '',
+      avatarUrl: ''
     }
   }
 
@@ -69,7 +86,9 @@ class User extends Component {
   }
 
   render () {
-    const { havePhone } = this.state
+    const { userState } = this.props
+    const havePhone = userState && userState.mobile
+    console.log(userState)
 
     return (
       <View className={styles.personal}>
@@ -78,11 +97,11 @@ class User extends Component {
           <View className={styles.personal_top_cont}>
             <View className={styles.personal_top_person}>
               <View className={styles.personal_top_person_img}>
-                <Image src={personalHeadImg} className={styles.person_icon_img} />
+                <Image src={userState.avatarUrl || personalHeadImg} className={styles.person_icon_img} />
               </View>
               <View className={styles.personal_top_person_name}>
-                <View className={styles.person_name}>姚先生</View>
-                <Text>{havePhone || '未绑定'}</Text>
+                <View className={styles.person_name}>{ userState.nickName || '' }</View>
+                <Text>{havePhone ? userState.mobile : '未绑定'}</Text>
               </View>
             </View>
             <View className={styles.personal_top_set}>
@@ -116,28 +135,24 @@ class User extends Component {
               <View className={styles.personal_main_item_box_one}>
                 <View className={styles.personal_main_item_box_one_img}>
                   <Image src={personalRightsCoupon} className={styles.personal_main_item_icon}/>
-                  <View className={styles.personal_main_item_tip}>2</View>
                 </View>
                 <Text>代金券</Text>
               </View>
               <View className={styles.personal_main_item_box_one}>
                 <View className={styles.personal_main_item_box_one_img}>
                   <Image src={personalRightsTwo} className={styles.personal_main_item_icon}/>
-                  <View className={styles.personal_main_item_tip}>12</View>
                 </View>
                 <Text>项目券</Text>
               </View>
               <View className={styles.personal_main_item_box_one}>
                 <View className={styles.personal_main_item_box_one_img}>
                   <Image src={personalRightsThree} className={styles.personal_main_item_icon}/>
-                  <View className={styles.personal_main_item_tip}>...</View>
                 </View>
                 <Text>我的奖品</Text>
               </View>
               <View className={styles.personal_main_item_box_one}>
                 <View className={styles.personal_main_item_box_one_img}>
                   <Image src={personalRightsFour} className={styles.personal_main_item_icon}/>
-                  <View className={styles.personal_main_item_tip}>12</View>
                 </View>
                 <Text>我的礼包</Text>
               </View>
@@ -152,7 +167,6 @@ class User extends Component {
               <View className={styles.personal_main_item_box_one}>
                 <View className={styles.personal_main_item_box_one_img}>
                   <Image src={personalCarOne} className={styles.personal_main_item_icon}/>
-                  <View className={styles.personal_main_item_tip}>12</View>
                 </View>
                 <Text>待使用订单</Text>
               </View>
@@ -166,7 +180,6 @@ class User extends Component {
               <View className={styles.personal_main_item_box_one}>
                 <View className={styles.personal_main_item_box_one_img}>
                   <Image src={personalCarThree} className={styles.personal_main_item_icon}/>
-                  <View className={styles.personal_main_item_tip}>12</View>
                 </View>
                 <Text>已预约</Text>
               </View>

@@ -10,9 +10,12 @@ import { setToken } from '@/utils/token'
 import { connect } from '@tarojs/redux'
 import { setUserAction } from '@/actions/user'
 import { TOKEN_KEY, USER_KEY } from '@/models/key'
+import { UserModel } from '@/models/user'
 
 // store里的数据
-type PageStateProps = {}
+type PageStateProps = {
+  userState: UserModel
+}
 // store里的方法
 type PageDispatchProps = {
   dispatchUser: (user) => void
