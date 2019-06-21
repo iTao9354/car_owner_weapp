@@ -18,7 +18,13 @@ export const ResponseError = '0'
 // 需要登录
 export const ResponseNeedLogin = '403'
 
-export interface BackEndResponseModel<T> {
+/**
+ * 返回对象
+ * code
+ * data
+ * message
+ */
+export interface ResponseModel<T> {
   code: ResponseCodeType
   data: T
   message: string
@@ -26,10 +32,5 @@ export interface BackEndResponseModel<T> {
   fail: boolean
 }
 
-/**
- * 返回对象
- * code
- * data
- * message
- */
-export interface ResponseModel<T> extends BackEndResponseModel<T> {}
+// 返回的data为null的情况
+export interface ResponseNullModel extends ResponseModel<null> {}

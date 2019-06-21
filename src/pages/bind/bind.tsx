@@ -5,6 +5,8 @@ import classNames from 'classnames'
 import * as validator from '@/utils/validator'
 import styles from './bind.scss'
 import logoImg from '@/static/images/logo.png'
+import { BindService } from '@/services/bind'
+import { ResponseSuccess } from '@/models/response'
 
 type PageOwnProps = {}
 type PageState = {
@@ -44,11 +46,40 @@ class Bind extends Component {
   }
 
   // 发送验证码
-  sendCode () {
+  bindService = new BindService()
+  async sendCode () {
     console.log('点我啊')
-    this.setState({
-      codeFlag: true
-    })
+    if (this.validMobile()) {
+      Taro.showLoading()
+      try {
+        const res = await this.bindService.doSendSms(this.state.mobile)
+        if (res.data.code === ResponseSuccess) {
+          console.log(res.data)
+          Taro.showToast({
+            title: '发送成功，10分钟内有效',
+            icon: 'none',
+            duration: 2000
+          })
+          this.setState({
+            codeFlag: true
+          })
+          let timer = setInterval(() => {
+            this.setState((prevState: PageState) => ({
+              leftTime: prevState.leftTime - 1
+            }))
+            if (this.state.leftTime === 0) {
+              clearInterval(timer)
+              // 重新获取
+              this.setState({
+                codeFlag: false,
+                leftTime: 59
+              })
+            }
+          }, 1000)
+        }
+      } catch (e) {}
+      Taro.hideLoading()
+    }
   }
 
   // 校验手机号
@@ -94,7 +125,7 @@ class Bind extends Component {
     }
   }
   // 一键绑定
-  onSubmit () {
+  async onSubmit () {
     if (!this.state.submitting) {
       return
     }
@@ -102,6 +133,14 @@ class Bind extends Component {
       this.setState({
         submitting: false
       })
+      try {
+        const { mobile, code } = this.state
+        const res = await this.bindService.doBindMobile({ mobile, code })
+        if (res.data.code === ResponseSuccess) {
+          console.log('绑定成功')
+          console.log(res.data)
+        }
+      } catch (e) {}
     }
   }
 

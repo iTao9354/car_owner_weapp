@@ -27,8 +27,8 @@ class App extends Component {
    */
   config: Config = {
     pages: [
-      'pages/index/index',
       'pages/bind/bind',
+      'pages/index/index',
       'pages/user/index',
     ],
     tabBar: {
@@ -36,9 +36,9 @@ class App extends Component {
       color: '#9BA2B8',
       list: [
         {
-          pagePath: 'pages/index/index',
+          pagePath: 'pages/user/index',
           text: '首页',
-          selectedIconPath: './static/images/tabs/index-active.png',
+          selectedIconPath: './static/images/tabs/icon-index-active.png',
           iconPath: './static/images/tabs/index.png',
         },
         {
