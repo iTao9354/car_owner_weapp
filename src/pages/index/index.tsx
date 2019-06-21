@@ -9,7 +9,7 @@ import { ResponseSuccess } from '@/models/response'
 import { setToken } from '@/utils/token'
 import { connect } from '@tarojs/redux'
 import { setUserAction } from '@/actions/user'
-import { TOKEN_KEY } from '@/models/key'
+import { TOKEN_KEY, USER_KEY } from '@/models/key'
 
 // store里的数据
 type PageStateProps = {}
@@ -32,7 +32,9 @@ interface Index {
 }
 
 const mapStateToProps = (state, ownProps) => {
-  return {}
+  return {
+    userState: state.user
+  }
 }
 const mapDispatchToProps = (dispatch, ownProps) => {
   return {
@@ -53,11 +55,13 @@ class Index extends Component {
       isAuthorized: true
     }
   }
-  
-  componentWillMount () {
-    this.getWeappCode()
-    if (!!this.computedDirectToIndex) {
 
+  token = Taro.getStorageSync(TOKEN_KEY)
+  user = Taro.getStorageSync(USER_KEY)
+
+  componentWillMount () {
+    if (this.computedDirectToIndex) {
+      this.userInfo(this.user)
     } else {
       this.getWeappCode()
     }
@@ -65,9 +69,8 @@ class Index extends Component {
 
   // 是否有token，有说明已经登陆
   get computedDirectToIndex () {
-    try {
-      const token = Taro.getStorageSync(TOKEN_KEY)
-      return token
+    try {      
+      return this.token && this.user
     } catch (e) {
       return false
     }
@@ -109,6 +112,8 @@ class Index extends Component {
       withCredentials: true
     }).then((res) => {
       this.props.dispatchUser(Object.assign({}, res.userInfo, loginUser))
+      Taro.setStorageSync(USER_KEY, Object.assign({}, res.userInfo, loginUser))
+      this.decrypt(res.encryptedData, res.iv)
       Taro.reLaunch({
         url: '/pages/user/index'
       })
@@ -117,6 +122,16 @@ class Index extends Component {
         isAuthorized: false
       })
     })
+  }
+
+  // 解密后台获取unionId
+  async decrypt (encryptedData: string, iv: string) {
+    Taro.showLoading()
+    try {
+      const res = await this.loginService.doDecrypt(encryptedData, iv)
+      if (res.data.code === ResponseSuccess) {}
+    } catch (e) {}
+    Taro.hideLoading()
   }
 
   render () {

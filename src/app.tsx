@@ -27,8 +27,8 @@ class App extends Component {
    */
   config: Config = {
     pages: [
-      'pages/bind/bind',
       'pages/index/index',
+      'pages/bind/bind',
       'pages/user/index',
     ],
     tabBar: {
