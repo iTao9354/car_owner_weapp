@@ -19,8 +19,6 @@ import personalListOne from '@/static/images/personal/icon-list-one.png'
 import personalListTwo from '@/static/images/personal/icon-list-two.png'
 import personalListThree from '@/static/images/personal/icon-list-three.png'
 import personalListFour from '@/static/images/personal/icon-list-four.png'
-import { UserService } from '@/services/user'
-import { ResponseSuccess } from '@/models/response'
 import { UserModel } from '@/models/user'
 import { connect } from '@tarojs/redux'
 
@@ -61,23 +59,6 @@ class User extends Component {
     }
   }
 
-  componentWillMount () {
-    this.getUserProfile()
-  }
-
-  // 获取信息
-  userService = new UserService()
-  async getUserProfile () {
-    Taro.showLoading()
-    try {
-      const res = await this.userService.getUserProfile()
-      if (res.data.code === ResponseSuccess) {
-        console.log(res.data)
-      }
-    } catch (e) {}
-    Taro.hideLoading()
-  }
-
   // 跳转到绑定页面
   redirectToBind () {
     Taro.navigateTo({
@@ -115,7 +96,7 @@ class User extends Component {
               </View>
               <View className={styles.personal_top_vip_right}>
                 {
-                  havePhone && 
+                  !havePhone && 
                   <View onClick={this.redirectToBind} className={styles.personal_top_vip_btn}>
                     <Text>绑定会员</Text>
                     <Image src={personalVipRight} className={styles.personal_top_vip_btn_icon}/>

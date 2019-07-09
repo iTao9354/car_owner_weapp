@@ -1,7 +1,7 @@
 // eslint-disable-next-line
 module.exports = {
   env: {
-    NODE_ENV: '"development"'
+    NODE_ENV: '"uat"'
   },
   defineConstants: {
     GLOBAL_BASE_URL: '"https://carownerweappuat.rocoinfo.cn"'

@@ -48,7 +48,7 @@ fly.interceptors.response.use(async (response) => {
     // 无权限，需要登录，需要清除本地信息，进入登录weapplogin流程
     clear()
     Taro.reLaunch({
-      url: '/pages/login/index'
+      url: '/pages/login/index?force=true'
     })
   }
   return response

@@ -62,10 +62,23 @@ class Index extends Component {
   token = Taro.getStorageSync(TOKEN_KEY)
   user = Taro.getStorageSync(USER_KEY)
 
-  componentWillMount () {
-    if (this.computedDirectToIndex) {
-      this.userInfo(this.user)
-    } else {
+  async componentWillMount () {
+    try {
+      // 403 token过期等 强制刷新 重头开始
+      if (this.$router.params.force) {
+        this.getWeappCode()
+      } else {
+        const res = await Taro.checkSession()
+        if (res.errMsg === 'checkSession:ok' && this.computedDirectToIndex) {
+          // storage 有缓存
+          this.userInfo(this.user)
+        } else {
+          // storage无缓存
+          this.getWeappCode()
+        }
+      }
+    } catch (e) {
+      // 检查失败重头开始
       this.getWeappCode()
     }
   }
@@ -112,7 +125,8 @@ class Index extends Component {
   // 获取用户信息，判断是否授权
   userInfo(loginUser) {
     Taro.getUserInfo({
-      withCredentials: true
+      withCredentials: true,
+      lang: 'zh_CN'
     }).then((res) => {
       this.props.dispatchUser(Object.assign({}, res.userInfo, loginUser))
       Taro.setStorageSync(USER_KEY, Object.assign({}, res.userInfo, loginUser))

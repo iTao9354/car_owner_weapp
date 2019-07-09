@@ -7,7 +7,17 @@ import styles from './bind.scss'
 import logoImg from '@/static/images/logo.png'
 import { BindService } from '@/services/bind'
 import { ResponseSuccess } from '@/models/response'
+import { UserModel } from '@/models/user'
+import { connect } from '@tarojs/redux'
+import { setUserAction } from '@/actions/user'
+import { USER_KEY } from '@/models/key'
 
+type PageStateProps = {
+  userState: UserModel
+}
+type PageDispatchProps = {
+  dispatchUser: (user: UserModel) => void
+}
 type PageOwnProps = {}
 type PageState = {
   mobile: string,
@@ -16,12 +26,25 @@ type PageState = {
   leftTime: number,
   submitting: boolean
 }
-type IProps = PageOwnProps
+type IProps = PageStateProps & PageDispatchProps & PageOwnProps
 interface Bind {
   props: IProps
   state: PageState
 }
 
+const mapStateToProps = (state, ownProps) => {
+  return {
+    userState: state.user
+  }
+}
+const mapDispatchToProps = (dispatch, ownProps) => {
+  return {
+    dispatchUser(user: UserModel) {
+      dispatch(setUserAction(user))
+    }
+  }
+}
+@connect(mapStateToProps, mapDispatchToProps)
 class Bind extends Component {
   config: Config = {
     navigationBarTitleText: 'xxx车服'
@@ -32,8 +55,8 @@ class Bind extends Component {
     this.state = {
       mobile: '',
       code: '',
-      codeFlag: false,
-      leftTime: 60,
+      codeFlag: false, // 验证码按钮状态 true  重新获取数秒 false
+      leftTime: 60, // 剩余秒数
       submitting: true // 可提交
     }
   }
@@ -41,8 +64,25 @@ class Bind extends Component {
   // 更新input
   inputHandler = (key, e) => {
     this.setState({
-      [key]: e.detail.value
+      [key]: e.detail.value.trim()
     })
+  }
+
+  // 倒计时
+  countDown () {
+    let timer = setInterval(() => {
+      this.setState((prevState: PageState) => ({
+        leftTime: prevState.leftTime - 1
+      }))
+      if (this.state.leftTime === 0) {
+        clearInterval(timer)
+        // 重新获取
+        this.setState({
+          codeFlag: false,
+          leftTime: 60
+        })
+      }
+    }, 1000)
   }
 
   // 发送验证码
@@ -63,19 +103,7 @@ class Bind extends Component {
           this.setState({
             codeFlag: true
           })
-          let timer = setInterval(() => {
-            this.setState((prevState: PageState) => ({
-              leftTime: prevState.leftTime - 1
-            }))
-            if (this.state.leftTime === 0) {
-              clearInterval(timer)
-              // 重新获取
-              this.setState({
-                codeFlag: false,
-                leftTime: 59
-              })
-            }
-          }, 1000)
+          this.countDown()
         }
       } catch (e) {}
       Taro.hideLoading()
@@ -84,15 +112,15 @@ class Bind extends Component {
 
   // 校验手机号
   validMobile () {
-    const trimmedMobile = this.state.mobile.trim()
-    if (trimmedMobile === '') {
+    const { mobile } = this.state
+    if (mobile === '') {
       Taro.showToast({
         title: '手机号码不能为空',
         icon: 'none',
         duration: 2000
       })
       return false
-    } else if (!validator.MobileValid(trimmedMobile)) {
+    } else if (!validator.MobileValid(mobile)) {
       Taro.showToast({
         title: '请输入正确的手机号',
         icon: 'none',
@@ -105,15 +133,15 @@ class Bind extends Component {
   }
   // 校验验证码
   validCode () {
-    const trimmedCode = this.state.code.trim()
-    if (trimmedCode === '') {
+    const { code } = this.state
+    if (code === '') {
       Taro.showToast({
         title: '验证码不能为空',
         icon: 'none',
         duration: 2000
       })
       return false
-    } else if (!validator.CaptchaValid(trimmedCode, 4)) {
+    } else if (!validator.CaptchaValid(code)) {
       Taro.showToast({
         title: '验证码错误',
         icon: 'none',
@@ -126,21 +154,37 @@ class Bind extends Component {
   }
   // 一键绑定
   async onSubmit () {
-    if (!this.state.submitting) {
-      return
-    }
-    if (this.validMobile() && this.validCode()) {
-      this.setState({
-        submitting: false
-      })
-      try {
-        const { mobile, code } = this.state
-        const res = await this.bindService.doBindMobile({ mobile, code })
-        if (res.data.code === ResponseSuccess) {
-          console.log('绑定成功')
-          console.log(res.data)
-        }
-      } catch (e) {}
+    if (this.state.submitting) {
+      if (this.validMobile() && this.validCode()) {
+        this.setState({
+          submitting: false
+        })
+        try {
+          const { mobile, code } = this.state
+          const res = await this.bindService.doBindMobile({ mobile, code })
+          if (res.data.code === ResponseSuccess) {
+            console.log('绑定成功')
+            console.log(res.data)
+            this.setState({
+              submitting: false
+            })
+            // 存user
+            const user = {...this.props.userState, mobile}
+            this.props.dispatchUser(user)
+            // 更新storage
+            Taro.setStorageSync(USER_KEY, user)
+            Taro.showToast({
+              title: '一键绑定成功',
+              icon: 'none',
+              duration: 2000
+            }).then(() => {
+              Taro.navigateBack({
+                delta: 1
+              })
+            })
+          }
+        } catch (e) {}
+      }
     }
   }
 
@@ -150,6 +194,7 @@ class Bind extends Component {
       [styles.label_wrap_code]: true
     })
     const { mobile, code, codeFlag, leftTime } = this.state
+    console.log(this.props.userState)
 
     return (
       <View className={styles.wrap_bind}>
@@ -171,6 +216,7 @@ class Bind extends Component {
             <View className={styles.code_wrap}>
               <Text className={styles.label_name}>验证码</Text>
               <Input 
+                type='number'
                 maxLength={6}
                 value={code}
                 onInput={this.inputHandler.bind(this, 'code')}
