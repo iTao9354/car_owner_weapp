@@ -11,6 +11,7 @@ import { connect } from '@tarojs/redux'
 import { setUserAction } from '@/actions/user'
 import { TOKEN_KEY, USER_KEY } from '@/models/key'
 import { UserModel } from '@/models/user'
+import { error_log } from '@/utils/log';
 
 // store里的数据
 type PageStateProps = {
@@ -78,6 +79,7 @@ class Index extends Component {
         }
       }
     } catch (e) {
+      error_log(e)
       // 检查失败重头开始
       this.getWeappCode()
     }
@@ -88,6 +90,7 @@ class Index extends Component {
     try {      
       return this.token && this.user
     } catch (e) {
+      error_log(e)
       return false
     }
   }
@@ -110,7 +113,9 @@ class Index extends Component {
         setToken(resData.weappAccessToken)
         this.userInfo(resData.loginUser)
       }
-    } catch (e) {}
+    } catch (e) {
+      error_log(e)
+    }
     Taro.hideLoading()
   }
 
@@ -135,6 +140,7 @@ class Index extends Component {
         url: '/pages/user/index'
       })
     }).catch((err) => {
+      error_log(err)
       this.setState({
         isAuthorized: false
       })
@@ -147,7 +153,9 @@ class Index extends Component {
     try {
       const res = await this.loginService.doDecrypt(encryptedData, iv)
       if (res.data.code === ResponseSuccess) {}
-    } catch (e) {}
+    } catch (e) {
+      error_log(e)
+    }
     Taro.hideLoading()
   }
 

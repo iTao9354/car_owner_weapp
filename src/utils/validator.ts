@@ -1,8 +1,11 @@
+import { error_log } from './log'
+
 // 手机号检测
 export function MobileValid (mobile) {
   try {
     return /^1[3|4|5|7|8]\d{9}$/.test(mobile)
   } catch (e) {
+    error_log(e)
     return false
   }
 }
@@ -12,6 +15,7 @@ export function CaptchaValid (captcha, length = 6) {
   try {
     return captcha.length === length
   } catch (e) {
+    error_log(e)
     return false
   }
 }

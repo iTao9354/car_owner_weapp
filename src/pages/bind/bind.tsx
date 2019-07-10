@@ -11,6 +11,7 @@ import { UserModel } from '@/models/user'
 import { connect } from '@tarojs/redux'
 import { setUserAction } from '@/actions/user'
 import { USER_KEY } from '@/models/key'
+import { error_log } from '@/utils/log'
 
 type PageStateProps = {
   userState: UserModel
@@ -105,7 +106,9 @@ class Bind extends Component {
           })
           this.countDown()
         }
-      } catch (e) {}
+      } catch (e) {
+        error_log(e)
+      }
       Taro.hideLoading()
     }
   }
@@ -183,7 +186,9 @@ class Bind extends Component {
               })
             })
           }
-        } catch (e) {}
+        } catch (e) {
+          error_log(e)
+        }
       }
     }
   }

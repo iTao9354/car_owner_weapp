@@ -1,4 +1,4 @@
-import fly from '@/configs/fly'
+import { fly } from '@/configs/fly'
 import { ResponseNullModel } from '@/models/response'
 import { BindFormModel } from '@/models/bind'
 

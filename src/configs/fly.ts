@@ -3,6 +3,7 @@ import { ResponseError, ResponseNeedLogin } from '@/models/response'
 import { FlyModal } from 'flyio'
 import { clear } from '@/utils/token'
 import { TOKEN_KEY } from '@/models/key'
+import { error_log } from '@/utils/log'
 
 let Fly: FlyModal
 if(process.env.TARO_ENV === 'h5') {
@@ -12,12 +13,12 @@ if(process.env.TARO_ENV === 'h5') {
 }
 
 // 全局设置
-const tokenFly = new Fly()
-const fly = new Fly()
+export const logFly = new Fly()
+export const fly = new Fly()
 
 console.log(GLOBAL_BASE_URL)
-tokenFly.config.timeout = 10000
-tokenFly.config.baseURL = GLOBAL_BASE_URL
+logFly.config.timeout = 1000
+logFly.config.baseURL = GLOBAL_BASE_URL
 
 fly.config.baseURL = GLOBAL_BASE_URL
 fly.config.withCredentials = true
@@ -32,7 +33,7 @@ fly.interceptors.request.use(async (request) => {
       request.params._ = Date.now()
     }
   } catch(e) {
-    console.log(e.errMsg || e.toString())
+    error_log(e)
   }
   return Promise.resolve(request)
 })
@@ -90,5 +91,3 @@ fly.interceptors.response.use(async (response) => {
   }
   return Promise.reject(error)
 })
-
-export default fly

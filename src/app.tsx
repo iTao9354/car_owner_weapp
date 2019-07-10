@@ -6,7 +6,8 @@ import configStore from './store'
 import Index from './pages/index'
 
 import './app.scss'
-import fly from '@/configs/fly'
+import '@/configs/fly'
+import { error_log } from '@/utils/log'
 import { isCurrentEnv } from '@/utils/env'
 
 isCurrentEnv()
@@ -66,7 +67,9 @@ class App extends Component {
 
   componentDidHide () {}
 
-  componentDidCatchError () {}
+  componentDidCatchError (error) {
+    error_log(error)
+  }
 
   // 在 App 类中的 render() 函数没有实际作用
   // 请勿修改此函数

@@ -1,4 +1,4 @@
-import fly from '@/configs/fly'
+import { fly } from '@/configs/fly'
 import { WeappLoginResponseModel } from '@/models/login'
 
 export class loginService {
